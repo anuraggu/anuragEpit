@@ -1,0 +1,8 @@
+# gitignore
+
+node_modules
+env.js
+.idea
+.DS_Store
+Assets
+.tern-project
