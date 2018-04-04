@@ -144,10 +144,71 @@ var getAllbooks = {
     },
 }
 
+var IssueBooks = {
+    method: 'POST',
+    path: '/v1/admin/IssueBooks',
+    config: {
+        description: 'Add IssueBooks',
+        tags: ['api', 'Admin'],
+        pre: [{ method: checkAdminTokenFromDB, assign: 'verify' }],
+        validate: {
+            payload: {
+                userId: Joi.string().trim().length(24).required(),
+                bookId: Joi.string().trim().length(24).required(),
+                accessToken:Joi.string().required()
+            },
+            failAction: FailActionFunction
+        }
+    },
+    handler: function (request, reply) {
+        var UserData = request.pre.verify.userData[0];
+        Controller.adminController.IssueBook(request.payload,UserData, (err, data)=> {
+            if (err) { //console.log("errRoute",err);
+                reply(sendError(err));
+            } else {
+                var messageObject = APP_CONSTANTS.STATUS_MSG.SUCCESS.DEFAULT
+                reply(sendSuccess(messageObject, data));
+            }
+        });
+    },
+}
+
+var returnBooks = {
+    method: 'POST',
+    path: '/v1/admin/returnBooks',
+    config: {
+        description: 'Add IssueBooks',
+        tags: ['api', 'Admin'],
+        pre: [{ method: checkAdminTokenFromDB, assign: 'verify' }],
+        validate: {
+            payload: {
+                userId: Joi.string().trim().length(24).required(),
+                bookId: Joi.string().trim().length(24).required(),
+                accessToken:Joi.string().required()
+            },
+            failAction: FailActionFunction
+        }
+    },
+    handler: function (request, reply) {
+        var UserData = request.pre.verify.userData[0];
+        Controller.adminController.returnBooks(request.payload,UserData, (err, data)=> {
+            if (err) { //console.log("errRoute",err);
+                reply(sendError(err));
+            } else {
+                var messageObject = APP_CONSTANTS.STATUS_MSG.SUCCESS.DEFAULT
+                reply(sendSuccess(messageObject, data));
+            }
+        });
+    },
+}
+
+
 module.exports = [
     login,
     registerStudent,
     addBooks,
-    getAllbooks
+    getAllbooks,
+    IssueBooks,
+    returnBooks
     
 ]

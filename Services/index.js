@@ -10,6 +10,7 @@
 module.exports = {
 
     BookService          : require('./Bookservices'),
+    IssueBookService     : require('./IssueBookServices'),
     UserService          : require('./userServices'),
     
 };

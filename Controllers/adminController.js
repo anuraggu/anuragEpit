@@ -185,12 +185,79 @@ var getAllbooks = function (payloadData,callbackRoute) {
             postListing: finalData
         });
     })   
+
 }
+
+var IssueBook = function (payloadData, userData, CallbackRoute) {
+    var bookData;
+    async.auto({
+        getBookData:[(cb)=>{
+            var criteria ={
+               _id:payloadData.bookId
+            }
+            Service.BookService.getData(criteria, {}, {}, (err, data)=> {
+                if (err)  return cb(err);
+                if(data.length==0) return cb({
+                    statusCode:400,
+                    message:'Book Is Not Valid'
+                });
+                bookData = data[0];
+                return cb();
+            }); 
+       }],
+       InsertBook:['getBookData',(ag1,cb)=>{
+        var dataTOInsert ={
+            bookId:payloadData.bookId,
+            userId:payloadData.userId,
+            IssueBy:userData._id,
+            issueDate:new Date().toISOString(),
+            created_at:new Date().toISOString(),
+        }
+            Service.IssueBookService.InsertData(dataTOInsert, (err, data)=> {
+                if (err)  return cb(err);
+                returnedData = data;
+                return cb();
+            }); 
+       }] 
+    },function(err,result){
+        if(err) return CallbackRoute(err);
+        return CallbackRoute();
+    });//console.log("hre",userData);
+    
+}
+
+var returnBooks = function (payloadData, userData, CallbackRoute) {
+    var bookData;
+    async.auto({
+       updateBook:[(cb)=>{
+        var dataTOInsert ={
+            returnDate:new Date().toISOString(),
+            }
+        var criteria ={
+               bookId:payloadData.bookId,
+               userId:payloadData.userId
+            }
+            Service.IssueBookService.updateData(criteria,dataTOInsert,{}, (err, data)=> {
+                if (err)  return cb(err);
+                returnedData = data;
+                return cb();
+            }); 
+       }] 
+    },function(err,result){
+        if(err) return CallbackRoute(err);
+        return CallbackRoute();
+    });//console.log("hre",userData);
+    
+}
+
+
 
 module.exports = {
     login: login,
     registerStudent:registerStudent,
     addBooks:addBooks,
-    getAllbooks:getAllbooks
+    getAllbooks:getAllbooks,
+    IssueBook:IssueBook,
+    returnBooks:returnBooks
     
 }

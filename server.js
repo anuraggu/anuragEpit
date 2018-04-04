@@ -123,7 +123,8 @@ const Db_Options = {
     pass: db.password
 };
 // Build the connection string.
-const mongoUrl = 'mongodb://' + db.host + ':' + db.port + '/' + db.name;
+const mongoUrl ='mongodb://anurag:123456@ds127888.mlab.com:27888/library3'; //
+//const mongoUrl ='mongodb://' + db.host + ':' + db.port + '/' + db.name;
 
 // create DB connection.
 mongoose.connect(mongoUrl, Db_Options, function (err) {
